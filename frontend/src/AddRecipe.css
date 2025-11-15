@@ -1,0 +1,53 @@
+
+.add-recipe-container 
+{
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+
+.add-recipe-container h2 
+{
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.add-recipe-container input,
+.add-recipe-container textarea 
+{
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.add-recipe-container button 
+{
+  width: 100%;
+  background-color: #ff7043;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-recipe-container button:hover 
+{
+  background-color: #e65c33;
+}
+
+.close-btn 
+{
+  background-color: #aaa;
+  margin-top: 10px; 
+}
+
+.close-btn:hover 
+{
+  background-color: #888;
+}
