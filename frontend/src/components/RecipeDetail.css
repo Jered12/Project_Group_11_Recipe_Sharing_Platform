@@ -1,0 +1,93 @@
+.recipe-detail-overlay 
+{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.recipe-detail-container 
+{
+  background: white;
+  width: 450px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+} 
+
+.recipe-detail-container img 
+{
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.recipe-detail-container h2 
+{
+  margin-bottom: 10px;
+}
+
+.recipe-detail-container h3 
+{
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.close-btn 
+{
+  margin-top: 20px;
+  background: #ff6347;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  float: right;
+}
+
+.close-btn:hover 
+{
+  background: #e04e33;
+}
+
+.favorite-btn {
+  padding: 10px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #f0f0f0;
+}
+
+.favorite-btn {
+  background-color: #ff7043;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.favorite-btn:hover {
+  background-color: #e65c33;
+}
+
+.favorite-btn.favorited {
+  background-color: #e91e63;
+}
+
+.favorite-btn.favorited:hover {
+  background-color: #c2185b;
+}
