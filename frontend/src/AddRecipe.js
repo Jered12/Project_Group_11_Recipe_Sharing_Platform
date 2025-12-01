@@ -20,44 +20,45 @@ function AddRecipe({onClose})
   };
 
   return (
-    // html and setup for creating a recipe pop up window
-    <div className="add-recipe-container">
-      <h2>Create a New Recipe</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title of recipe"
-          value={title}
-          onChange={(e)=>setTitle(e.target.value)}
-          required
-        />
+    <div className="add-recipe-detail-overlay">
+      <div className="add-recipe-container">
+        <h2>Create a New Recipe</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title of recipe"
+            value={title}
+            onChange={(e)=>setTitle(e.target.value)}
+            required
+          />
 
-        <textarea
-          placeholder="Add the ingredients of the recipe"
-          value={ingredients}
-          onChange={(e)=>setIngredients(e.target.value)}
-          required
-        />
+          <textarea
+            placeholder="Add the ingredients of the recipe"
+            value={ingredients}
+            onChange={(e)=>setIngredients(e.target.value)}
+            required
+          />
 
-        <textarea
-          placeholder="Add instructions on how to make the recipe"
-          value={instructions}
-          onChange={(e)=>setInstructions(e.target.value)}
-          required
-        />
+          <textarea
+            placeholder="Add instructions on how to make the recipe"
+            value={instructions}
+            onChange={(e)=>setInstructions(e.target.value)}
+            required
+          />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e)=>setImage(e.target.files[0])}
-        />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e)=>setImage(e.target.files[0])}
+          />
 
-        <button type="submit">Create</button>
-      </form>
+          <button type="submit">Create</button>
+        </form>
 
-      <button className="close-btn"onClick={onClose}>
-        Cancel
-      </button>
+        <button className="close-btn"onClick={onClose}>
+          Cancel
+        </button>
+      </div>
     </div>
 
   );
