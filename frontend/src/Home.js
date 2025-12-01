@@ -5,16 +5,16 @@ import RecipeCard from "./components/RecipeCard";
 import AddRecipe from "./AddRecipe";
 import RecipeDetail from "./components/RecipeDetail";
 
-//the main hoome page
+//the main home page
 function Home() 
 {
   //states
-  const [showAddRecipe,setShowAddRecipe]=useState(false);
-  const [selectedRecipe,setSelectedRecipe]=useState(null);
-  
-  //sample recipe that will be replaced when backend gets added with actuall recipes
-  const sampleRecipe= 
-  {
+  const [showAddRecipe, setShowAddRecipe] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [activeFilter, setActiveFilter] = useState(null);
+
+  //temporary recipe until backend is added
+  const sampleRecipe = {
     title: "Avocado Toast",
     description: "Toasted bread topped with smashed avocado and seasoning.",
     image:
@@ -22,36 +22,88 @@ function Home()
     ingredients: "2 slices of bread, 1 avocado, salt",
     instructions:
       "Toast the bread then Mash avocado and spread on toast then Add salt.",
+    rating: 0,
+    comments: []
+  };
+
+  // chck filetr function
+  const checkFilter = (recipe, filterType) => 
+  {
+    //if there are no filters return all the recipies
+    if (!filterType)
+    { 
+      return true;
+    }
+    //make all the ingrediants lowercase
+    const ingredients = recipe.ingredients.toLowerCase();
+    //now if certain words are seen in the ingredients they should not be in the fileter type
+    const rules = 
+    {
+      vegan: ["chicken", "beef", "pork", "fish", "egg", "milk", "cheese", "butter"],
+      nutfree: ["almond", "peanut", "walnut", "cashew"],
+      glutenfree: ["bread", "wheat", "flour", "pasta"]
+    };
+
+    // leave true if there are no forbiddent items
+    return !rules[filterType].some(item => ingredients.includes(item));
+  };
+
+  // figure out if recipe matches current filter
+  const recipeMatchesFilter = checkFilter(sampleRecipe, activeFilter);
+
+  // update recipe stars when they are clicked
+  const handleRating = (newRating) => 
+  {
+    setSelectedRecipe({ ...selectedRecipe, rating: newRating });
+  };
+
+  // update recipe comments when they are added
+  const handleAddComment = (text) => 
+  {
+    setSelectedRecipe({
+      ...selectedRecipe,
+      comments: [...selectedRecipe.comments, text]
+    });
   };
 
   return (
-    //html for the homepage where it adds everything together
-    //including the navigation bar at the top, the recipe card
-    //the sidebar, the add recipe, and the recipe details
     <div>
       <Navbar />
+
       <div className="main-layout">
         <div className="recipe-section">
-          
-          <div onClick={()=>setSelectedRecipe(sampleRecipe)}>
-            <RecipeCard
-              title={sampleRecipe.title}
-              description={sampleRecipe.description}
-              image={sampleRecipe.image}
-            />
 
-          </div>
+          {/* Only show recipe if it passes filter */}
+          {recipeMatchesFilter && (
+            <div onClick={() => setSelectedRecipe(sampleRecipe)}>
+              <RecipeCard
+                title={sampleRecipe.title}
+                description={sampleRecipe.description}
+                image={sampleRecipe.image}
+              />
+            </div>
+          )}
         </div>
 
-        <Sidebar onAddClick={()=>setShowAddRecipe(true)} />
+        {/* SIDEBAR WITH FILTERS + ADD BUTTON */}
+        <Sidebar
+          onAddClick={() => setShowAddRecipe(true)}
+          onFilter={(filterType) => setActiveFilter(filterType)}
+        />
       </div>
 
-      {showAddRecipe && <AddRecipe onClose={()=>setShowAddRecipe(false)} />}
+      {/* ADD RECIPE FORM */}
+      {showAddRecipe && (
+        <AddRecipe onClose={() => setShowAddRecipe(false)} />
+      )}
 
+      {/* FULL RECIPE DETAIL VIEW */}
       {selectedRecipe && (
         <RecipeDetail
           recipe={selectedRecipe}
-          onClose={()=>setSelectedRecipe(null)}
+          onClose={() => setSelectedRecipe(null)}
+          onRate={handleRating}
+          onComment={handleAddComment}
         />
       )}
     </div>
