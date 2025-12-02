@@ -4,106 +4,123 @@ import Sidebar from "./components/Sidebar";
 import RecipeCard from "./components/RecipeCard";
 import AddRecipe from "./AddRecipe";
 import RecipeDetail from "./components/RecipeDetail";
+import Favorites from "./components/Favorites";
+import Profile from "./components/Profile";
+import Dashboard from "./components/Dashboard";
 
-//the main home page
-function Home() 
-{
-  //states
-  const [showAddRecipe, setShowAddRecipe] = useState(false);
+function Home() {
+
+  // ---------- PAGE NAVIGATION ----------
+  const [page, setPage] = useState("home");
+
+  // ---------- USER PROFILE ----------
+  const [user, setUser] = useState({
+    username: "GuestUser",
+    email: "guest@example.com",
+    joined: "2025-02-01"
+  });
+
+  // ---------- RECIPES ----------
+  const [recipes, setRecipes] = useState([
+    {
+      id: 1,
+      title: "Avocado Toast",
+      description: "Toasted bread topped with smashed avocado and seasoning.",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYF8Tx4WkKVlM3OXT-Id-5NFtGDYa9a339Qg&s",
+      ingredients: "2 slices of bread, 1 avocado, salt",
+      instructions:
+        "Toast the bread then mash avocado and spread on toast then add salt.",
+      averageRating: 0,
+      comments: []
+    }
+  ]);
+
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [showAddRecipe, setShowAddRecipe] = useState(false);
   const [activeFilter, setActiveFilter] = useState(null);
 
-  //temporary recipe until backend is added
-  const sampleRecipe = {
-    title: "Avocado Toast",
-    description: "Toasted bread topped with smashed avocado and seasoning.",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYF8Tx4WkKVlM3OXT-Id-5NFtGDYa9a339Qg&s",
-    ingredients: "2 slices of bread, 1 avocado, salt",
-    instructions:
-      "Toast the bread then Mash avocado and spread on toast then Add salt.",
-    rating: 0,
-    comments: []
+  // ---------- HANDLE RATING UPDATE ----------
+  const handleRateUpdate = (recipeId, newAverage) => {
+    setRecipes(prev =>
+      prev.map(r =>
+        r.id === recipeId ? { ...r, averageRating: newAverage } : r
+      )
+    );
+
+    if (selectedRecipe?.id === recipeId) {
+      setSelectedRecipe(prev => ({ ...prev, averageRating: newAverage }));
+    }
   };
 
-  // chck filetr function
-  const checkFilter = (recipe, filterType) => 
-  {
-    //if there are no filters return all the recipies
-    if (!filterType)
-    { 
-      return true;
-    }
-    //make all the ingrediants lowercase
+  const checkFilter = (recipe, filterType) => {
+    if (!filterType) return true;
+
     const ingredients = recipe.ingredients.toLowerCase();
-    //now if certain words are seen in the ingredients they should not be in the fileter type
-    const rules = 
-    {
+
+    const rules = {
       vegan: ["chicken", "beef", "pork", "fish", "egg", "milk", "cheese", "butter"],
       nutfree: ["almond", "peanut", "walnut", "cashew"],
       glutenfree: ["bread", "wheat", "flour", "pasta"]
     };
 
-    // leave true if there are no forbiddent items
     return !rules[filterType].some(item => ingredients.includes(item));
-  };
-
-  // figure out if recipe matches current filter
-  const recipeMatchesFilter = checkFilter(sampleRecipe, activeFilter);
-
-  // update recipe stars when they are clicked
-  const handleRating = (newRating) => 
-  {
-    setSelectedRecipe({ ...selectedRecipe, rating: newRating });
-  };
-
-  // update recipe comments when they are added
-  const handleAddComment = (text) => 
-  {
-    setSelectedRecipe({
-      ...selectedRecipe,
-      comments: [...selectedRecipe.comments, text]
-    });
   };
 
   return (
     <div>
-      <Navbar />
+      <Navbar onNavigate={setPage} />
 
-      <div className="main-layout">
-        <div className="recipe-section">
-
-          {/* Only show recipe if it passes filter */}
-          {recipeMatchesFilter && (
-            <div onClick={() => setSelectedRecipe(sampleRecipe)}>
-              <RecipeCard
-                title={sampleRecipe.title}
-                description={sampleRecipe.description}
-                image={sampleRecipe.image}
-              />
+      {page === "home" && (
+        <>
+          <div className="main-layout">
+            <div className="recipe-section">
+              {recipes.map(recipe =>
+                checkFilter(recipe, activeFilter) && (
+                  <div key={recipe.id} onClick={() => setSelectedRecipe(recipe)}>
+                    <RecipeCard
+                      title={recipe.title}
+                      description={recipe.description}
+                      image={recipe.image}
+                    />
+                  </div>
+                )
+              )}
             </div>
+
+            <Sidebar
+              onAddClick={() => setShowAddRecipe(true)}
+              onFilter={setActiveFilter}
+            />
+          </div>
+
+          {showAddRecipe && (
+            <AddRecipe onClose={() => setShowAddRecipe(false)} />
           )}
-        </div>
-
-        {/* SIDEBAR WITH FILTERS + ADD BUTTON */}
-        <Sidebar
-          onAddClick={() => setShowAddRecipe(true)}
-          onFilter={(filterType) => setActiveFilter(filterType)}
-        />
-      </div>
-
-      {/* ADD RECIPE FORM */}
-      {showAddRecipe && (
-        <AddRecipe onClose={() => setShowAddRecipe(false)} />
+        </>
       )}
 
-      {/* FULL RECIPE DETAIL VIEW */}
+      {page === "favorites" && (
+        <Favorites recipes={recipes} onSelect={setSelectedRecipe} />
+      )}
+
+      {page === "profile" && (
+        <Profile
+          user={user}
+          onUpdate={setUser}
+          onNavigate={setPage}
+        />
+      )}
+
+      {page === "dashboard" && (
+        <Dashboard user={user} />
+      )}
+
       {selectedRecipe && (
         <RecipeDetail
           recipe={selectedRecipe}
           onClose={() => setSelectedRecipe(null)}
-          onRate={handleRating}
-          onComment={handleAddComment}
+          onRate={handleRateUpdate}
         />
       )}
     </div>

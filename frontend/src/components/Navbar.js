@@ -1,15 +1,19 @@
 import React from "react";
 
-function Navbar() 
-{
+function Navbar({ onNavigate }) {
   return (
-    //main naviagtion bar at the top of the page container
-    //it has the logo, name, and serach bar
     <div className="navbar">
-
       <div className="logo">🍴 RecipeShare</div>
-      <input className="search-bar"type="text"placeholder="Search recipes..." />
 
+      <input
+        className="search-bar"
+        type="text"
+        placeholder="Search recipes..."
+      />
+
+      <button onClick={() => onNavigate("home")}>Home</button>
+      <button onClick={() => onNavigate("favorites")}>Favorites</button>
+      <button onClick={() => onNavigate("profile")}>👤 Profile</button>
     </div>
   );
 }
